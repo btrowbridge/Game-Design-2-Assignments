@@ -1,0 +1,44 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AimBarrel : MonoBehaviour {
+
+    public float RotateSpeed = 10;
+    public float AimDistance = 1000;
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void FixedUpdate () {
+
+        int x = Screen.width / 2;
+        int y = Screen.height / 2;
+
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(x, y));
+
+        Debug.DrawRay(ray.origin, ray.direction * AimDistance, Color.yellow);
+        Debug.DrawRay(transform.position, transform.forward * AimDistance, Color.blue);
+
+        RaycastHit hit;
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(AimDistance);
+        }
+       
+
+        var targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, RotateSpeed * Time.fixedDeltaTime);
+
+    }
+}
