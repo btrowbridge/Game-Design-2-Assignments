@@ -31,8 +31,11 @@ public class Explode : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
-        Instantiate(explosion, transform.position, transform.rotation);
+        if (!this.enabled)
+        {
+            Instantiate(explosion, transform.position, transform.rotation);
+        }
     }
 }
