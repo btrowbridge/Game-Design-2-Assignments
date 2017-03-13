@@ -1,25 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class Fire_Net : NetworkBehaviour
 {
-
     public GameObject Ammo;
+
     public Transform AmmoSpawnPoint;
     //public AudioClip Audio;
 
     [Range(0, 1)]
     public float FireRate;
+
     [Range(2, 1000.0f)]
     public float FireForce;
-
 
     protected float nextShot = 0.0F;
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (isLocalPlayer)
         {
@@ -30,16 +28,15 @@ public class Fire_Net : NetworkBehaviour
                 CmdShoot();
             }
         }
-        else
-        {
-            Destroy(this);
-        }
+
     }
 
     [Command]
     protected void CmdShoot()
     {
-        var bullet = GameObject.Instantiate(Ammo, AmmoSpawnPoint.position, transform.rotation);
+        var bullet = GameObject.Instantiate(Ammo, AmmoSpawnPoint.position, transform.rotation) as GameObject;
         bullet.GetComponent<Rigidbody>().AddForce(AmmoSpawnPoint.up * FireForce);
+
+        NetworkServer.Spawn(bullet);
     }
 }

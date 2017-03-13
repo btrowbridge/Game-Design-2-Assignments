@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class AimBarrel : MonoBehaviour {
-
+public class AimBarrel : MonoBehaviour
+{
     public float RotateSpeed = 10;
     public float AimDistance = 1000;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
 
+    // Use this for initialization
+    private void Start()
+    {
+    }
+
+    // Update is called once per frame
+    private void FixedUpdate()
+    {
         int x = Screen.width / 2;
         int y = Screen.height / 2;
 
@@ -27,8 +25,6 @@ public class AimBarrel : MonoBehaviour {
         Vector3 targetPoint = ray.GetPoint(AimDistance);
 
         AimAt(targetPoint);
-
-
     }
 
     protected void AimAt(Vector3 targetPoint)
@@ -36,6 +32,5 @@ public class AimBarrel : MonoBehaviour {
         var targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, RotateSpeed * Time.fixedDeltaTime);
-
     }
 }

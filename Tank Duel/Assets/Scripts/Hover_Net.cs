@@ -10,6 +10,7 @@ public class Hover_Net : NetworkBehaviour
     public float hoverForce = 10.0f;
     public float jumpForce = 1000.0f;
     public List<Transform> boosters;
+    private bool jump;
     private float currentHeight = 0.0f;
     private float hoverForceMultiplier = 0.0f;
     private Vector3 hoverForceApplied = Vector3.zero;
@@ -17,13 +18,33 @@ public class Hover_Net : NetworkBehaviour
 
     void Start()
     {
-        if (!isLocalPlayer) Destroy(this);
+        if (!isLocalPlayer)
+        {
+            Destroy(this);
+            return;
+        }
 
         rb = GetComponentInParent<Rigidbody>();  
     }
     void FixedUpdate()
     {
+
+        if (isLocalPlayer && Input.GetKeyDown(KeyCode.Space) && tag == "Player")
+        {
+            CmdThrusters();
+        }
+        
+
+
         ActivateBoosters();
+        
+        
+
+    }
+
+    private void CmdThrusters()
+    {
+        jump = true;
     }
 
     private void ActivateBoosters()
@@ -34,11 +55,12 @@ public class Hover_Net : NetworkBehaviour
             RaycastHit rayHit;
             if (Physics.Raycast(booster.position, Vector3.down, out rayHit))
             {
-                if ( rayHit.collider.CompareTag("Environment"))
+                if (rayHit.collider.CompareTag("Environment"))
                 {
                     currentHeight = rayHit.distance;
                     float boostedForce = 0;
-                    if (Input.GetKeyDown(KeyCode.Space) && tag == "Player")
+
+                    if (jump)
                     {
                         boostedForce = jumpForce;
                     }
@@ -66,11 +88,13 @@ public class Hover_Net : NetworkBehaviour
                 {
                     rb.angularVelocity = Vector3.zero;
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.identity, Time.fixedDeltaTime);
-                    
+
                 }
             }
 
         }
+
+        jump = false;
     }
 }
 

@@ -1,23 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Explode : MonoBehaviour {
-
+public class Explode : MonoBehaviour
+{
     public int collisionDamage = 5;
     public GameObject explosion;
     // Use this for initialization
 
     private float invulnerabilityTime = 0.2f;
-	void Start () {
+
+    private void Start()
+    {
         invulnerabilityTime += Time.time;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-    void OnCollisionEnter(Collision collision)
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+    }
+
+    private void OnCollisionEnter(Collision collision)
     {
         if (Time.time < invulnerabilityTime) return;
 
@@ -25,13 +26,14 @@ public class Explode : MonoBehaviour {
 
         if (other.tag == "Player" || other.tag == "Enemy")
         {
-            TankHealth tankHealth = other.GetComponent<TankHealth>();
-            tankHealth.TakeDamage(collisionDamage);
+            TankHealth_Net tankHealth = other.GetComponent<TankHealth_Net>();
+            if(tankHealth)
+                tankHealth.TakeDamage(collisionDamage);
         }
         Destroy(gameObject);
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         if (!this.enabled)
         {
